@@ -11,7 +11,7 @@ use Icinga\Exception\IcingaException;
 class GettextTranslator
 {
     /** @var string Default gettext domain */
-    protected $defaultDomain = 'icinga';
+    protected $defaultDomain = 'default';
 
     /** @var string Default locale code */
     protected $defaultLocale = 'en_US';
