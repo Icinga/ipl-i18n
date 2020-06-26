@@ -8,7 +8,7 @@ use Icinga\Exception\IcingaException;
 /**
  * Helper class to ease internationalization when using gettext
  */
-class Translator
+class GettextTranslator
 {
     /**
      * The default gettext domain used as fallback
