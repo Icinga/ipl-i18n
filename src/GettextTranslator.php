@@ -10,22 +10,18 @@ use Icinga\Exception\IcingaException;
  */
 class GettextTranslator
 {
-    /**
-     * The default gettext domain used as fallback
-     */
-    const DEFAULT_DOMAIN = 'icinga';
+    /** @var string Default gettext domain */
+    protected $defaultDomain = 'icinga';
 
-    /**
-     * The locale code that is used in the project
-     */
-    const DEFAULT_LOCALE = 'en_US';
+    /** @var string Default locale code */
+    protected $defaultLocale = 'en_US';
 
     /**
      * Known gettext domains and directories
      *
      * @var array
      */
-    private static $knownDomains = array();
+    private $knownDomains = array();
 
     /**
      * Translate a string
@@ -38,19 +34,19 @@ class GettextTranslator
      *
      * @return  string                  The translated string
      */
-    public static function translate($text, $domain, $context = null)
+    public function translate($text, $domain, $context = null)
     {
         if ($context !== null) {
-            $res = self::pgettext($text, $domain, $context);
-            if ($res === $text && $domain !== self::DEFAULT_DOMAIN) {
-                $res = self::pgettext($text, self::DEFAULT_DOMAIN, $context);
+            $res = $this->pgettext($text, $domain, $context);
+            if ($res === $text && $domain !== $this->defaultDomain) {
+                $res = $this->pgettext($text, $this->defaultDomain, $context);
             }
             return $res;
         }
 
         $res = dgettext($domain, $text);
-        if ($res === $text && $domain !== self::DEFAULT_DOMAIN) {
-            return dgettext(self::DEFAULT_DOMAIN, $text);
+        if ($res === $text && $domain !== $this->defaultDomain) {
+            return dgettext($this->defaultDomain, $text);
         }
         return $res;
     }
@@ -68,19 +64,19 @@ class GettextTranslator
      *
      * @return string                       The translated string
      */
-    public static function translatePlural($textSingular, $textPlural, $number, $domain, $context = null)
+    public function translatePlural($textSingular, $textPlural, $number, $domain, $context = null)
     {
         if ($context !== null) {
-            $res = self::pngettext($textSingular, $textPlural, $number, $domain, $context);
-            if (($res === $textSingular || $res === $textPlural) && $domain !== self::DEFAULT_DOMAIN) {
-                $res = self::pngettext($textSingular, $textPlural, $number, self::DEFAULT_DOMAIN, $context);
+            $res = $this->pngettext($textSingular, $textPlural, $number, $domain, $context);
+            if (($res === $textSingular || $res === $textPlural) && $domain !== $this->defaultDomain) {
+                $res = $this->pngettext($textSingular, $textPlural, $number, $this->defaultDomain, $context);
             }
             return $res;
         }
 
         $res = dngettext($domain, $textSingular, $textPlural, $number);
-        if (($res === $textSingular || $res === $textPlural) && $domain !== self::DEFAULT_DOMAIN) {
-            $res = dngettext(self::DEFAULT_DOMAIN, $textSingular, $textPlural, $number);
+        if (($res === $textSingular || $res === $textPlural) && $domain !== $this->defaultDomain) {
+            $res = dngettext($this->defaultDomain, $textSingular, $textPlural, $number);
         }
         return $res;
     }
@@ -96,7 +92,7 @@ class GettextTranslator
      *
      * @return string
      */
-    public static function pgettext($text, $domain, $context)
+    public function pgettext($text, $domain, $context)
     {
         $contextString = "{$context}\004{$text}";
 
@@ -126,7 +122,7 @@ class GettextTranslator
      *
      * @return string
      */
-    public static function pngettext($textSingular, $textPlural, $number, $domain, $context)
+    public function pngettext($textSingular, $textPlural, $number, $domain, $context)
     {
         $contextString = "{$context}\004{$textSingular}";
 
@@ -153,7 +149,7 @@ class GettextTranslator
      *
      * @throws  IcingaException     In case the domain was not successfully registered
      */
-    public static function registerDomain($name, $directory)
+    public function registerDomain($name, $directory)
     {
         if (bindtextdomain($name, $directory) === false) {
             throw new IcingaException(
@@ -163,7 +159,7 @@ class GettextTranslator
             );
         }
         bind_textdomain_codeset($name, 'UTF-8');
-        self::$knownDomains[$name] = $directory;
+        $this->knownDomains[$name] = $directory;
     }
 
     /**
@@ -173,11 +169,11 @@ class GettextTranslator
      *
      * @throws  IcingaException         In case the locale's name is invalid
      */
-    public static function setupLocale($localeName)
+    public function setupLocale($localeName)
     {
         if (setlocale(LC_ALL, $localeName . '.UTF-8') === false && setlocale(LC_ALL, $localeName) === false) {
             setlocale(LC_ALL, 'C'); // C == "use whatever is hardcoded"
-            if ($localeName !== self::DEFAULT_LOCALE) {
+            if ($localeName !== $this->defaultLocale) {
                 throw new IcingaException(
                     'Cannot set locale \'%s\' for category \'LC_ALL\'',
                     $localeName
@@ -200,14 +196,14 @@ class GettextTranslator
      *
      * @return  object              An object with a 'language' and 'country' attribute
      */
-    public static function splitLocaleCode($locale = null)
+    public function splitLocaleCode($locale = null)
     {
         $matches = array();
         $locale = $locale !== null ? $locale : setlocale(LC_ALL, 0);
         if (preg_match('@([a-z]{2})[_-]([a-z]{2})@i', $locale, $matches)) {
             list($languageCode, $countryCode) = array_slice($matches, 1);
         } elseif ($locale === 'C') {
-            list($languageCode, $countryCode) = preg_split('@[_-]@', static::DEFAULT_LOCALE, 2);
+            list($languageCode, $countryCode) = preg_split('@[_-]@', $this->defaultLocale, 2);
         } else {
             $languageCode = $locale;
             $countryCode = null;
@@ -221,10 +217,10 @@ class GettextTranslator
      *
      * @return  array
      */
-    public static function getAvailableLocaleCodes()
+    public function getAvailableLocaleCodes()
     {
-        $codes = array(static::DEFAULT_LOCALE);
-        foreach (array_values(self::$knownDomains) as $directory) {
+        $codes = array($this->defaultLocale);
+        foreach (array_values($this->knownDomains) as $directory) {
             $dh = opendir($directory);
             while (false !== ($name = readdir($dh))) {
                 if (substr($name, 0, 1) !== '.'
@@ -247,7 +243,7 @@ class GettextTranslator
      *
      * @return  string              The browser's preferred locale code
      */
-    public static function getPreferredLocaleCode($header)
+    public function getPreferredLocaleCode($header)
     {
         $headerValues = explode(',', $header);
         for ($i = 0; $i < count($headerValues); $i++) {
@@ -282,7 +278,7 @@ class GettextTranslator
             array_values($requestedLocales)
         );
 
-        $availableLocales = static::getAvailableLocaleCodes();
+        $availableLocales = $this->getAvailableLocaleCodes();
         $availableLocales = array_combine(
             array_map('strtolower', array_values($availableLocales)),
             array_values($availableLocales)
@@ -291,10 +287,10 @@ class GettextTranslator
         $similarMatch = null;
 
         foreach ($requestedLocales as $requestedLocaleLowered => $requestedLocale) {
-            $localeObj = static::splitLocaleCode($requestedLocaleLowered);
+            $localeObj = $this->splitLocaleCode($requestedLocaleLowered);
 
             if (isset($availableLocales[$requestedLocaleLowered])
-                && (! $similarMatch || static::splitLocaleCode($similarMatch)->language === $localeObj->language)
+                && (! $similarMatch || $this->splitLocaleCode($similarMatch)->language === $localeObj->language)
             ) {
                 // Prefer perfect match only if no similar match has been found yet or the perfect match is more precise
                 // than the similar match
@@ -303,7 +299,7 @@ class GettextTranslator
 
             if (! $similarMatch) {
                 foreach ($availableLocales as $availableLocaleLowered => $availableLocale) {
-                    if (static::splitLocaleCode($availableLocaleLowered)->language === $localeObj->language) {
+                    if ($this->splitLocaleCode($availableLocaleLowered)->language === $localeObj->language) {
                         $similarMatch = $availableLocaleLowered;
                         break;
                     }
@@ -311,6 +307,6 @@ class GettextTranslator
             }
         }
 
-        return $similarMatch ? $availableLocales[$similarMatch] : static::DEFAULT_LOCALE;
+        return $similarMatch ? $availableLocales[$similarMatch] : $this->defaultLocale;
     }
 }
