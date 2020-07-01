@@ -24,6 +24,30 @@ class GettextTranslator
     private $knownDomains = array();
 
     /**
+     * Get the default domain
+     *
+     * @return string
+     */
+    public function getDefaultDomain()
+    {
+        return $this->defaultDomain;
+    }
+
+    /**
+     * Set the default domain
+     *
+     * @param string $defaultDomain
+     *
+     * @return $this
+     */
+    public function setDefaultDomain($defaultDomain)
+    {
+        $this->defaultDomain = $defaultDomain;
+
+        return $this;
+    }
+
+    /**
      * Translate a string
      *
      * Falls back to the default domain in case the string cannot be translated using the given domain
