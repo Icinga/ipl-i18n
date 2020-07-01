@@ -16,6 +16,9 @@ class GettextTranslator
     /** @var string Default locale code */
     protected $defaultLocale = 'en_US';
 
+    /** @var array Available translations as array[$locale][$domain] => $directory */
+    protected $translations = [];
+
     /**
      * Known gettext domains and directories
      *
@@ -67,6 +70,32 @@ class GettextTranslator
     public function setDefaultLocale($defaultLocale)
     {
         $this->defaultLocale = $defaultLocale;
+
+        return $this;
+    }
+
+    /**
+     * Get available translations
+     *
+     * @return array Available translations as array[$locale][$domain] => $directory
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Add a translation
+     *
+     * @param string $locale    Locale code
+     * @param string $directory Path to translation file
+     * @param string $domain    Optional domain of the translation
+     *
+     * @return $this
+     */
+    public function addTranslation($locale, $directory, $domain = null)
+    {
+        $this->translations[$locale][$domain ?: $this->defaultDomain] = $directory;
 
         return $this;
     }
