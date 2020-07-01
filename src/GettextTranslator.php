@@ -48,6 +48,30 @@ class GettextTranslator
     }
 
     /**
+     * Get the default locale
+     *
+     * @return string
+     */
+    public function getDefaultLocale()
+    {
+        return $this->defaultLocale;
+    }
+
+    /**
+     * Set the default locale
+     *
+     * @param string $defaultLocale
+     *
+     * @return $this
+     */
+    public function setDefaultLocale($defaultLocale)
+    {
+        $this->defaultLocale = $defaultLocale;
+
+        return $this;
+    }
+
+    /**
      * Translate a string
      *
      * Falls back to the default domain in case the string cannot be translated using the given domain
