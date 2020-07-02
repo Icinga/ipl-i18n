@@ -166,6 +166,29 @@ class GettextTranslator
     }
 
     /**
+     * Setup the primary locale code to use for translations
+     *
+     * Calls {@link loadTranslation()} internally.
+     *
+     * @param string $locale Locale code
+     *
+     * @return $this
+     * @throws \Exception If {@link bindtextdomain()} fails for a domain
+     */
+    public function setupLocale($locale)
+    {
+        putenv('LANGUAGE=C.UTF-8');
+
+        $this->loadTranslation($locale);
+
+        textdomain($this->getDefaultDomain() . '.' . $locale);
+
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
      * Translate a string
      *
      * Falls back to the default domain in case the string cannot be translated using the given domain
@@ -302,29 +325,6 @@ class GettextTranslator
         }
         bind_textdomain_codeset($name, 'UTF-8');
         $this->knownDomains[$name] = $directory;
-    }
-
-    /**
-     * Setup the primary locale code to use for translations
-     *
-     * Calls {@link loadTranslation()} internally.
-     *
-     * @param string $locale Locale code
-     *
-     * @return $this
-     * @throws \Exception If {@link bindtextdomain()} fails for a domain
-     */
-    public function setupLocale($locale)
-    {
-        putenv('LANGUAGE=C.UTF-8');
-
-        $this->loadTranslation($locale);
-
-        textdomain($this->getDefaultDomain() . '.' . $locale);
-
-        $this->locale = $locale;
-
-        return $this;
     }
 
     /**
