@@ -19,6 +19,9 @@ class GettextTranslator
     /** @var array Available translations as array[$locale][$domain] => $directory */
     protected $translations = [];
 
+    /** @var array Loaded translations as array[$locale][$domain] => $directory */
+    protected $loadedTranslations = [];
+
     /**
      * Known gettext domains and directories
      *
@@ -96,6 +99,55 @@ class GettextTranslator
     public function addTranslation($locale, $directory, $domain = null)
     {
         $this->translations[$locale][$domain ?: $this->defaultDomain] = $directory;
+
+        return $this;
+    }
+
+    /**
+     * Get loaded translations
+     *
+     * @return array Loaded translations as array[$locale][$domain] => $directory
+     */
+    public function getLoadedTranslations()
+    {
+        return $this->loadedTranslations;
+    }
+
+    /**
+     * Load a translation so that gettext is able to locate its message catalogs
+     *
+     * {@link bindtextdomain()} is called internally for every domain and path that has been added for the given locale
+     * with {@link addTranslation()}.
+     *
+     * @param string $locale Locale code
+     *
+     * @return $this
+     * @throws \Exception If {@link bindtextdomain()} fails for a domain
+     */
+    public function loadTranslation($locale)
+    {
+        foreach ($this->translations[$locale] as $domain => $directory) {
+            if (
+                isset($this->loadedTranslations[$locale][$domain])
+                && $this->loadedTranslations[$locale][$domain] === $directory
+            ) {
+                continue;
+            }
+
+            $domainWithLocale = $domain . '.' . $locale;
+
+            if (bindtextdomain($domainWithLocale, $directory) !== $directory) {
+                throw new \Exception(sprintf(
+                    "Can't register domain '%s' with path '%s'",
+                    $domain,
+                    $directory
+                ));
+            }
+
+            bind_textdomain_codeset($domain, 'UTF-8');
+
+            $this->loadedTranslations[$locale][$domain] = $directory;
+        }
 
         return $this;
     }
