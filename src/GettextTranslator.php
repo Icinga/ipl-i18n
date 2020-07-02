@@ -22,6 +22,9 @@ class GettextTranslator
     /** @var array Loaded translations as array[$locale][$domain] => $directory */
     protected $loadedTranslations = [];
 
+    /** @var string Primary locale code used for translations */
+    protected $locale;
+
     /**
      * Known gettext domains and directories
      *
@@ -150,6 +153,16 @@ class GettextTranslator
         }
 
         return $this;
+    }
+
+    /**
+     * Get the primary locale code used for translations
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 
     /**
