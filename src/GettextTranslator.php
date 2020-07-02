@@ -305,30 +305,26 @@ class GettextTranslator
     }
 
     /**
-     * Set the locale to use
+     * Setup the primary locale code to use for translations
      *
-     * @param   string  $localeName     The name of the locale to use
+     * Calls {@link loadTranslation()} internally.
      *
-     * @throws  IcingaException         In case the locale's name is invalid
+     * @param string $locale Locale code
+     *
+     * @return $this
+     * @throws \Exception If {@link bindtextdomain()} fails for a domain
      */
-    public function setupLocale($localeName)
+    public function setupLocale($locale)
     {
-        if (setlocale(LC_ALL, $localeName . '.UTF-8') === false && setlocale(LC_ALL, $localeName) === false) {
-            setlocale(LC_ALL, 'C'); // C == "use whatever is hardcoded"
-            if ($localeName !== $this->defaultLocale) {
-                throw new IcingaException(
-                    'Cannot set locale \'%s\' for category \'LC_ALL\'',
-                    $localeName
-                );
-            }
-        } else {
-            $locale = setlocale(LC_ALL, 0);
-            putenv('LC_ALL=' . $locale); // Failsafe, Win and Unix
-            putenv('LANG=' . $locale); // Windows fix, untested
+        putenv('LANGUAGE=C.UTF-8');
 
-            // https://www.gnu.org/software/gettext/manual/html_node/The-LANGUAGE-variable.html
-            putenv('LANGUAGE=' . $localeName . ':' . getenv('LANGUAGE'));
-        }
+        $this->loadTranslation($locale);
+
+        textdomain($this->getDefaultDomain() . '.' . $locale);
+
+        $this->locale = $locale;
+
+        return $this;
     }
 
     /**
