@@ -136,7 +136,7 @@ class GettextTranslator
                 continue;
             }
 
-            $domainWithLocale = $domain . '.' . $locale;
+            $domainWithLocale = $this->encodeDomainWithLocale($domain, $locale);
 
             if (bindtextdomain($domainWithLocale, $directory) !== $directory) {
                 throw new \Exception(sprintf(
@@ -181,7 +181,7 @@ class GettextTranslator
 
         $this->loadTranslation($locale);
 
-        textdomain($this->getDefaultDomain() . '.' . $locale);
+        textdomain($this->encodeDomainWithLocale($this->getDefaultDomain(), $locale));
 
         $this->locale = $locale;
 
