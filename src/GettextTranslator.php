@@ -267,34 +267,34 @@ class GettextTranslator
         return $translation;
     }
 
-    /**
-     * Translate a plural string
-     *
-     * Falls back to the default domain in case the string cannot be translated using the given domain
-     *
-     * @param   string      $textSingular   The string in singular form to translate
-     * @param   string      $textPlural     The string in plural form to translate
-     * @param   integer     $number         The amount to determine from whether to return singular or plural
-     * @param   string      $domain         The primary domain to use
-     * @param   string|null $context        Optional parameter for context based translation
-     *
-     * @return string                       The translated string
-     */
-    public function translatePlural($textSingular, $textPlural, $number, $domain, $context = null)
+    public function translatePlural($singular, $plural, $number, $context = null, $locale = null)
     {
         if ($context !== null) {
-            $res = $this->pngettext($textSingular, $textPlural, $number, $domain, $context);
-            if (($res === $textSingular || $res === $textPlural) && $domain !== $this->defaultDomain) {
-                $res = $this->pngettext($textSingular, $textPlural, $number, $this->defaultDomain, $context);
-            }
-            return $res;
+            $singularForGettext = $this->encodeMessageWithContext($singular, $context);
+        } else {
+            $singularForGettext = $singular;
         }
 
-        $res = dngettext($domain, $textSingular, $textPlural, $number);
-        if (($res === $textSingular || $res === $textPlural) && $domain !== $this->defaultDomain) {
-            $res = dngettext($this->defaultDomain, $textSingular, $textPlural, $number);
+        if ($locale !== null) {
+            $translation = dngettext(
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale),
+                $singularForGettext,
+                $plural,
+                $number
+            );
+        } else {
+            $translation = ngettext(
+                $singularForGettext,
+                $plural,
+                $number
+            );
         }
-        return $res;
+
+        if ($translation === $singularForGettext) {
+            return $number === 1 ? $singular : $plural;
+        }
+
+        return $translation;
     }
 
     /**
