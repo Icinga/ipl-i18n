@@ -178,6 +178,7 @@ class GettextTranslator
     public function setupLocale($locale)
     {
         putenv('LANGUAGE=C.UTF-8');
+        setlocale(LC_MESSAGES, 'C.UTF-8');
 
         $this->loadTranslation($locale);
 
