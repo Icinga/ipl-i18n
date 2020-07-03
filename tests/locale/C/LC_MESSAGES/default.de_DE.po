@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: de\n"
+"Last-Translator: \n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: ipl/l10n\n"
+"Report-Msgid-Bugs-To: \n"
+
+msgid "user"
+msgstr "Benutzer"
+
+msgctxt "context"
+msgid "request"
+msgstr "Anfrage"
+
+msgid "%d user"
+msgid_plural "%d user"
+msgstr[0] "ein Benutzer"
+msgstr[1] "%d Benutzer"
+
+msgctxt "context"
+msgid "%d request"
+msgid_plural "%d requests"
+msgstr[0] "eine Anfrage"
+msgstr[1] "%d Anfragen"
+
+msgid "group"
+msgstr "Gruppe"
+
+msgid "%d group"
+msgid_plural "%d groups"
+msgstr[0] "eine Gruppe"
+msgstr[1] "%d Gruppen"
