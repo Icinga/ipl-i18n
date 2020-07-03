@@ -190,6 +190,19 @@ class GettextTranslator
     }
 
     /**
+     * Encode a domain with locale to the representation used for .mo files
+     *
+     * @param string $domain
+     * @param string $locale
+     *
+     * @return string The encoded domain as domain + "." + locale
+     */
+    public function encodeDomainWithLocale($domain, $locale)
+    {
+        return $domain . '.' . $locale;
+    }
+
+    /**
      * Encode a message with context to the representation used in .mo files
      *
      * @param string $message
