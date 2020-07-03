@@ -217,32 +217,28 @@ class GettextTranslator
         return "{$context}\x04{$message}";
     }
 
-    /**
-     * Translate a string
-     *
-     * Falls back to the default domain in case the string cannot be translated using the given domain
-     *
-     * @param   string      $text       The string to translate
-     * @param   string      $domain     The primary domain to use
-     * @param   string|null $context    Optional parameter for context based translation
-     *
-     * @return  string                  The translated string
-     */
-    public function translate($text, $domain, $context = null)
+    public function translate($message, $context = null, $locale = null)
     {
         if ($context !== null) {
-            $res = $this->pgettext($text, $domain, $context);
-            if ($res === $text && $domain !== $this->defaultDomain) {
-                $res = $this->pgettext($text, $this->defaultDomain, $context);
-            }
-            return $res;
+            $messageForGettext = $this->encodeMessageWithContext($message, $context);
+        } else {
+            $messageForGettext = $message;
         }
 
-        $res = dgettext($domain, $text);
-        if ($res === $text && $domain !== $this->defaultDomain) {
-            return dgettext($this->defaultDomain, $text);
+        if ($locale !== null) {
+            $translation = dgettext(
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale),
+                $messageForGettext
+            );
+        } else {
+            $translation = gettext($messageForGettext);
         }
-        return $res;
+
+        if ($translation === $messageForGettext) {
+            return $message;
+        }
+
+        return $translation;
     }
 
     /**
