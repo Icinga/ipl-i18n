@@ -189,6 +189,21 @@ class GettextTranslator
     }
 
     /**
+     * Encode a message with context to the representation used in .mo files
+     *
+     * @param string $message
+     * @param string $context
+     *
+     * @return string The encoded message as context + "\x04" + message
+     */
+    public function encodeMessageWithContext($message, $context)
+    {
+        // The encoding of a context and a message in a .mo file is
+        // context + "\x04" + message (gettext version >= 0.15)
+        return "{$context}\x04{$message}";
+    }
+
+    /**
      * Translate a string
      *
      * Falls back to the default domain in case the string cannot be translated using the given domain
