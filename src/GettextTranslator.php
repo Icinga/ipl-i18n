@@ -240,6 +240,33 @@ class GettextTranslator
         return $translation;
     }
 
+    public function translateInDomain($domain, $message, $context = null, $locale = null)
+    {
+        if ($context !== null) {
+            $messageForGettext = $this->encodeMessageWithContext($message, $context);
+        } else {
+            $messageForGettext = $message;
+        }
+
+        $translation = dgettext(
+            $this->encodeDomainWithLocale($domain, $locale ?: $this->getLocale()),
+            $messageForGettext
+        );
+
+        if ($translation === $messageForGettext) {
+            $translation = dgettext(
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale ?: $this->getLocale()),
+                $messageForGettext
+            );
+        }
+
+        if ($translation === $messageForGettext) {
+            return $message;
+        }
+
+        return $translation;
+    }
+
     /**
      * Translate a plural string
      *
