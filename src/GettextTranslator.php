@@ -174,7 +174,7 @@ class GettextTranslator
      * @return $this
      * @throws \Exception If {@link bindtextdomain()} fails for a domain
      */
-    public function setupLocale($locale)
+    public function setLocale($locale)
     {
         putenv('LANGUAGE=C.UTF-8');
         setlocale(LC_MESSAGES, 'C.UTF-8');
