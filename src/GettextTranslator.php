@@ -297,6 +297,39 @@ class GettextTranslator
         return $translation;
     }
 
+    public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null, $locale = null)
+    {
+        if ($context !== null) {
+            $singularForGettext = $this->encodeMessageWithContext($singular, $context);
+        } else {
+            $singularForGettext = $singular;
+        }
+
+        $translation = dngettext(
+            $this->encodeDomainWithLocale($domain, $locale ?: $this->getLocale()),
+            $singularForGettext,
+            $plural,
+            $number
+        );
+
+        $isSingular = $number === 1;
+
+        if ($translation === ($isSingular ? $singularForGettext : $plural)) {
+            $translation = dngettext(
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale ?: $this->getLocale()),
+                $singularForGettext,
+                $plural,
+                $number
+            );
+        }
+
+        if ($translation === $singularForGettext) {
+            return $isSingular ? $singular : $plural;
+        }
+
+        return $translation;
+    }
+
     /**
      * Emulated pgettext()
      *
