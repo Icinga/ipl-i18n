@@ -331,27 +331,6 @@ class GettextTranslator
     }
 
     /**
-     * Register a new gettext domain
-     *
-     * @param   string  $name       The name of the domain to register
-     * @param   string  $directory  The directory where message catalogs can be found
-     *
-     * @throws  IcingaException     In case the domain was not successfully registered
-     */
-    public function registerDomain($name, $directory)
-    {
-        if (bindtextdomain($name, $directory) === false) {
-            throw new IcingaException(
-                'Cannot register domain \'%s\' with path \'%s\'',
-                $name,
-                $directory
-            );
-        }
-        bind_textdomain_codeset($name, 'UTF-8');
-        $this->knownDomains[$name] = $directory;
-    }
-
-    /**
      * Split and return the language code and country code of the given locale or the current locale
      *
      * @param   string  $locale     The locale code to split, or null to split the current locale
