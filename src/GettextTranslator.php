@@ -331,34 +331,6 @@ class GettextTranslator
     }
 
     /**
-     * Emulated pgettext()
-     *
-     * @link http://php.net/manual/de/book.gettext.php#89975
-     *
-     * @param $text
-     * @param $domain
-     * @param $context
-     *
-     * @return string
-     */
-    public function pgettext($text, $domain, $context)
-    {
-        $contextString = "{$context}\004{$text}";
-
-        $translation = dcgettext(
-            $domain,
-            $contextString,
-            defined('LC_MESSAGES') ? LC_MESSAGES : LC_ALL
-        );
-
-        if ($translation == $contextString) {
-            return $text;
-        } else {
-            return $translation;
-        }
-    }
-
-    /**
      * Emulated pngettext()
      *
      * @link http://php.net/manual/de/book.gettext.php#89975
