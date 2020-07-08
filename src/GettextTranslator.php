@@ -331,38 +331,6 @@ class GettextTranslator
     }
 
     /**
-     * Emulated pngettext()
-     *
-     * @link http://php.net/manual/de/book.gettext.php#89975
-     *
-     * @param $textSingular
-     * @param $textPlural
-     * @param $number
-     * @param $domain
-     * @param $context
-     *
-     * @return string
-     */
-    public function pngettext($textSingular, $textPlural, $number, $domain, $context)
-    {
-        $contextString = "{$context}\004{$textSingular}";
-
-        $translation = dcngettext(
-            $domain,
-            $contextString,
-            $textPlural,
-            $number,
-            defined('LC_MESSAGES') ? LC_MESSAGES : LC_ALL
-        );
-
-        if ($translation == $contextString || $translation == $textPlural) {
-            return ($number == 1 ? $textSingular : $textPlural);
-        } else {
-            return $translation;
-        }
-    }
-
-    /**
      * Register a new gettext domain
      *
      * @param   string  $name       The name of the domain to register
