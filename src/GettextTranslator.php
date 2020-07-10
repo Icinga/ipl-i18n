@@ -25,13 +25,6 @@ class GettextTranslator
     protected $locale;
 
     /**
-     * Known gettext domains and directories
-     *
-     * @var array
-     */
-    private $knownDomains = array();
-
-    /**
      * Get the default domain
      *
      * @return string
