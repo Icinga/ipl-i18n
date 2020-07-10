@@ -34,9 +34,9 @@ class Locale
     /**
      * Split and return the language code and country code of the given locale or the current locale
      *
-     * @param   string  $locale     The locale code to split, or null to split the current locale
+     * @param string $locale The locale code to split, or null to split the current locale
      *
-     * @return  object              An object with a 'language' and 'country' attribute
+     * @return object An object with a 'language' and 'country' attribute
      */
     public function splitLocaleCode($locale = null)
     {
@@ -57,10 +57,10 @@ class Locale
     /**
      * Return the preferred locale based on the given HTTP header and the available translations
      *
-     * @param   string  $header     The HTTP "Accept-Language" header
-     * @param   array   $available  Available translations
+     * @param string $header    The HTTP "Accept-Language" header
+     * @param array  $available Available translations
      *
-     * @return  string              The browser's preferred locale code
+     * @return string The browser's preferred locale code
      */
     public function getPreferred($header, array $available)
     {
@@ -77,6 +77,7 @@ class Locale
                 $tagB = explode(';', $b[0], 2);
                 $qValA = (float) (strpos($a[0], ';') > 0 ? substr(array_pop($tagA), 2) : 1);
                 $qValB = (float) (strpos($b[0], ';') > 0 ? substr(array_pop($tagB), 2) : 1);
+
                 return $qValA < $qValB ? 1 : ($qValA > $qValB ? -1 : ($a[1] > $b[1] ? 1 : ($a[1] < $b[1] ? -1 : 0)));
             }
         );
