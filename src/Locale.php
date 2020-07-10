@@ -83,10 +83,10 @@ class Locale
         $similarMatch = null;
 
         foreach ($requestedLocales as $requestedLocaleLowered => $requestedLocale) {
-            $localeObj = $this->splitLocaleCode($requestedLocaleLowered);
+            $localeObj = $this->parseLocale($requestedLocaleLowered);
 
             if (isset($availableLocales[$requestedLocaleLowered])
-                && (! $similarMatch || $this->splitLocaleCode($similarMatch)->language === $localeObj->language)
+                && (! $similarMatch || $this->parseLocale($similarMatch)->language === $localeObj->language)
             ) {
                 // Prefer perfect match only if no similar match has been found yet or the perfect match is more precise
                 // than the similar match
@@ -95,7 +95,7 @@ class Locale
 
             if (! $similarMatch) {
                 foreach ($availableLocales as $availableLocaleLowered => $availableLocale) {
-                    if ($this->splitLocaleCode($availableLocaleLowered)->language === $localeObj->language) {
+                    if ($this->parseLocale($availableLocaleLowered)->language === $localeObj->language) {
                         $similarMatch = $availableLocaleLowered;
                         break;
                     }
@@ -107,25 +107,16 @@ class Locale
     }
 
     /**
-     * Split and return the language code and country code of the given locale or the current locale
+     * Parse a locale into its subtags
      *
-     * @param string $locale The locale code to split, or null to split the current locale
+     * Converts to output of {@link \Locale::parseLocale()} to an object and returns it.
      *
-     * @return object An object with a 'language' and 'country' attribute
+     * @param string $locale
+     *
+     * @return object Output of {@link \Locale::parseLocale()} converted to an object
      */
-    public function splitLocaleCode($locale = null)
+    public function parseLocale($locale)
     {
-        $matches = [];
-        $locale = $locale !== null ? $locale : setlocale(LC_ALL, 0);
-        if (preg_match('@([a-z]{2})[_-]([a-z]{2})@i', $locale, $matches)) {
-            list($languageCode, $countryCode) = array_slice($matches, 1);
-        } elseif ($locale === 'C') {
-            list($languageCode, $countryCode) = preg_split('@[_-]@', $this->defaultLocale, 2);
-        } else {
-            $languageCode = $locale;
-            $countryCode = null;
-        }
-
-        return (object) ['language' => $languageCode, 'country' => $countryCode];
+        return (object) \Locale::parseLocale($locale);
     }
 }
