@@ -15,8 +15,8 @@ class GettextTranslator
     /** @var string Default locale code */
     protected $defaultLocale = 'en_US';
 
-    /** @var array Available translations as array[$locale][$domain] => $directory */
-    protected $translations = [];
+    /** @var array Known translation directories as array[$domain] => $directory */
+    protected $translationDirectories = [];
 
     /** @var array Loaded translations as array[$locale][$domain] => $directory */
     protected $loadedTranslations = [];
@@ -82,25 +82,24 @@ class GettextTranslator
     /**
      * Get available translations
      *
-     * @return array Available translations as array[$locale][$domain] => $directory
+     * @return array Available translations as array[$domain] => $directory
      */
-    public function getTranslations()
+    public function getTranslationDirectories()
     {
-        return $this->translations;
+        return $this->translationDirectories;
     }
 
     /**
-     * Add a translation
+     * Add a translation directory
      *
-     * @param string $locale    Locale code
-     * @param string $directory Path to translation file
+     * @param string $directory Path to translation files
      * @param string $domain    Optional domain of the translation
      *
      * @return $this
      */
-    public function addTranslation($locale, $directory, $domain = null)
+    public function addTranslationDirectory($directory, $domain = null)
     {
-        $this->translations[$locale][$domain ?: $this->defaultDomain] = $directory;
+        $this->translationDirectories[$domain ?: $this->defaultDomain] = $directory;
 
         return $this;
     }
@@ -128,7 +127,7 @@ class GettextTranslator
      */
     public function loadTranslation($locale)
     {
-        foreach ($this->translations[$locale] as $domain => $directory) {
+        foreach ($this->translationDirectories as $domain => $directory) {
             if (
                 isset($this->loadedTranslations[$locale][$domain])
                 && $this->loadedTranslations[$locale][$domain] === $directory
@@ -216,7 +215,7 @@ class GettextTranslator
         return "{$context}\x04{$message}";
     }
 
-    public function translate($message, $context = null, $locale = null)
+    public function translate($message, $context = null)
     {
         if ($context !== null) {
             $messageForGettext = $this->encodeMessageWithContext($message, $context);
@@ -224,14 +223,7 @@ class GettextTranslator
             $messageForGettext = $message;
         }
 
-        if ($locale !== null) {
-            $translation = dgettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale),
-                $messageForGettext
-            );
-        } else {
-            $translation = gettext($messageForGettext);
-        }
+        $translation = gettext($messageForGettext);
 
         if ($translation === $messageForGettext) {
             return $message;
@@ -249,13 +241,13 @@ class GettextTranslator
         }
 
         $translation = dgettext(
-            $this->encodeDomainWithLocale($domain, $locale ?: $this->getLocale()),
+            $this->encodeDomainWithLocale($domain, $this->getLocale()),
             $messageForGettext
         );
 
         if ($translation === $messageForGettext) {
             $translation = dgettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale ?: $this->getLocale()),
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $this->getLocale()),
                 $messageForGettext
             );
         }
@@ -267,7 +259,7 @@ class GettextTranslator
         return $translation;
     }
 
-    public function translatePlural($singular, $plural, $number, $context = null, $locale = null)
+    public function translatePlural($singular, $plural, $number, $context = null)
     {
         if ($context !== null) {
             $singularForGettext = $this->encodeMessageWithContext($singular, $context);
@@ -275,20 +267,12 @@ class GettextTranslator
             $singularForGettext = $singular;
         }
 
-        if ($locale !== null) {
-            $translation = dngettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale),
-                $singularForGettext,
-                $plural,
-                $number
-            );
-        } else {
-            $translation = ngettext(
-                $singularForGettext,
-                $plural,
-                $number
-            );
-        }
+
+        $translation = ngettext(
+            $singularForGettext,
+            $plural,
+            $number
+        );
 
         if ($translation === $singularForGettext) {
             return $number === 1 ? $singular : $plural;
@@ -297,7 +281,7 @@ class GettextTranslator
         return $translation;
     }
 
-    public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null, $locale = null)
+    public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null)
     {
         if ($context !== null) {
             $singularForGettext = $this->encodeMessageWithContext($singular, $context);
@@ -306,7 +290,7 @@ class GettextTranslator
         }
 
         $translation = dngettext(
-            $this->encodeDomainWithLocale($domain, $locale ?: $this->getLocale()),
+            $this->encodeDomainWithLocale($domain, $this->getLocale()),
             $singularForGettext,
             $plural,
             $number
@@ -316,7 +300,7 @@ class GettextTranslator
 
         if ($translation === ($isSingular ? $singularForGettext : $plural)) {
             $translation = dngettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $locale ?: $this->getLocale()),
+                $this->encodeDomainWithLocale($this->getDefaultDomain(), $this->getLocale()),
                 $singularForGettext,
                 $plural,
                 $number
