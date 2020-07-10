@@ -2,8 +2,6 @@
 
 namespace ipl\I18n;
 
-use Icinga\Exception\IcingaException;
-
 /**
  * Helper class to ease internationalization when using gettext
  */
