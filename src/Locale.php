@@ -40,7 +40,7 @@ class Locale
      */
     public function splitLocaleCode($locale = null)
     {
-        $matches = array();
+        $matches = [];
         $locale = $locale !== null ? $locale : setlocale(LC_ALL, 0);
         if (preg_match('@([a-z]{2})[_-]([a-z]{2})@i', $locale, $matches)) {
             list($languageCode, $countryCode) = array_slice($matches, 1);
@@ -51,7 +51,7 @@ class Locale
             $countryCode = null;
         }
 
-        return (object) array('language' => $languageCode, 'country' => $countryCode);
+        return (object) ['language' => $languageCode, 'country' => $countryCode];
     }
 
     /**
@@ -68,7 +68,7 @@ class Locale
         for ($i = 0; $i < count($headerValues); $i++) {
             // In order to accomplish a stable sort we need to take the original
             // index into account as well during element comparison
-            $headerValues[$i] = array($headerValues[$i], $i);
+            $headerValues[$i] = [$headerValues[$i], $i];
         }
         usort( // Sort DESC but keep equal elements ASC
             $headerValues,
@@ -84,7 +84,7 @@ class Locale
             // We need to reset the array to its original structure once it's sorted
             $headerValues[$i] = $headerValues[$i][0];
         }
-        $requestedLocales = array();
+        $requestedLocales = [];
         foreach ($headerValues as $headerValue) {
             if (strpos($headerValue, ';') > 0) {
                 $parts = explode(';', $headerValue, 2);
