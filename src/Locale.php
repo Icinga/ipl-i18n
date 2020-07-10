@@ -32,29 +32,6 @@ class Locale
     }
 
     /**
-     * Split and return the language code and country code of the given locale or the current locale
-     *
-     * @param string $locale The locale code to split, or null to split the current locale
-     *
-     * @return object An object with a 'language' and 'country' attribute
-     */
-    public function splitLocaleCode($locale = null)
-    {
-        $matches = [];
-        $locale = $locale !== null ? $locale : setlocale(LC_ALL, 0);
-        if (preg_match('@([a-z]{2})[_-]([a-z]{2})@i', $locale, $matches)) {
-            list($languageCode, $countryCode) = array_slice($matches, 1);
-        } elseif ($locale === 'C') {
-            list($languageCode, $countryCode) = preg_split('@[_-]@', $this->defaultLocale, 2);
-        } else {
-            $languageCode = $locale;
-            $countryCode = null;
-        }
-
-        return (object) ['language' => $languageCode, 'country' => $countryCode];
-    }
-
-    /**
      * Return the preferred locale based on the given HTTP header and the available translations
      *
      * @param string $header    The HTTP "Accept-Language" header
@@ -127,5 +104,28 @@ class Locale
         }
 
         return $similarMatch ? $availableLocales[$similarMatch] : $this->defaultLocale;
+    }
+
+    /**
+     * Split and return the language code and country code of the given locale or the current locale
+     *
+     * @param string $locale The locale code to split, or null to split the current locale
+     *
+     * @return object An object with a 'language' and 'country' attribute
+     */
+    public function splitLocaleCode($locale = null)
+    {
+        $matches = [];
+        $locale = $locale !== null ? $locale : setlocale(LC_ALL, 0);
+        if (preg_match('@([a-z]{2})[_-]([a-z]{2})@i', $locale, $matches)) {
+            list($languageCode, $countryCode) = array_slice($matches, 1);
+        } elseif ($locale === 'C') {
+            list($languageCode, $countryCode) = preg_split('@[_-]@', $this->defaultLocale, 2);
+        } else {
+            $languageCode = $locale;
+            $countryCode = null;
+        }
+
+        return (object) ['language' => $languageCode, 'country' => $countryCode];
     }
 }
