@@ -58,10 +58,11 @@ class Locale
      * Return the preferred locale based on the given HTTP header and the available translations
      *
      * @param   string  $header     The HTTP "Accept-Language" header
+     * @param   array   $available  Available translations
      *
      * @return  string              The browser's preferred locale code
      */
-    public function getPreferredLocaleCode($header)
+    public function getPreferredLocaleCode($header, array $available)
     {
         $headerValues = explode(',', $header);
         for ($i = 0; $i < count($headerValues); $i++) {
@@ -96,10 +97,9 @@ class Locale
             array_values($requestedLocales)
         );
 
-        $availableLocales = $this->getAvailableLocaleCodes();
         $availableLocales = array_combine(
-            array_map('strtolower', array_values($availableLocales)),
-            array_values($availableLocales)
+            array_map('strtolower', array_values($available)),
+            array_values($available)
         );
 
         $similarMatch = null;
