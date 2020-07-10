@@ -62,7 +62,7 @@ class Locale
      *
      * @return  string              The browser's preferred locale code
      */
-    public function getPreferredLocaleCode($header, array $available)
+    public function getPreferred($header, array $available)
     {
         $headerValues = explode(',', $header);
         for ($i = 0; $i < count($headerValues); $i++) {
