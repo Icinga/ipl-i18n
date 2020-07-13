@@ -132,6 +132,17 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testListLocales()
+    {
+        $this->assertSame(
+            ['de_DE', 'it_IT'],
+            (new GettextTranslator())
+                ->addTranslationDirectory(static::TRANSLATIONS)
+                ->addTranslationDirectory(static::TRANSLATIONS, 'special')
+                ->listLocales()
+        );
+    }
+
     public function testTranslate()
     {
         $translator = (new GettextTranslator())
