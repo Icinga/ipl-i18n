@@ -2,6 +2,10 @@
 
 namespace ipl\I18n;
 
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 /**
  * Helper class to ease internationalization when using gettext
  */
@@ -306,26 +310,38 @@ class GettextTranslator
     }
 
     /**
-     * Return a list of all locale codes currently available in the known domains
+     * List available locales by traversing the translation directories from {@link addTranslationDirectory()}
      *
-     * @return  array
+     * @return string[] Array of available locale codes
      */
-    public function getAvailableLocaleCodes()
+    public function listLocales()
     {
-        $codes = array($this->defaultLocale);
-        foreach (array_values($this->knownDomains) as $directory) {
-            $dh = opendir($directory);
-            while (false !== ($name = readdir($dh))) {
-                if (substr($name, 0, 1) !== '.'
-                    && false === in_array($name, $codes)
-                    && is_dir($directory . DIRECTORY_SEPARATOR . $name)
+        $locales = [];
+
+        foreach (array_unique($this->getTranslationDirectories()) as $directory) {
+            $fs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                $directory,
+                FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS
+            ));
+
+            foreach ($fs as $file) {
+                if (
+                    ! $file->isFile()
+                    || $file->getExtension() !== 'mo'
                 ) {
-                    $codes[] = $name;
+                    continue;
                 }
+
+                $locale = explode('.', $file->getBasename('.mo'));
+
+                $locales[] = array_pop($locale);
             }
         }
-        sort($codes);
 
-        return $codes;
+        $locales = array_filter(array_unique($locales));
+
+        sort($locales);
+
+        return $locales;
     }
 }
