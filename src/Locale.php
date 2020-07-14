@@ -85,7 +85,8 @@ class Locale
         foreach ($requestedLocales as $requestedLocaleLowered => $requestedLocale) {
             $localeObj = $this->parseLocale($requestedLocaleLowered);
 
-            if (isset($availableLocales[$requestedLocaleLowered])
+            if (
+                isset($availableLocales[$requestedLocaleLowered])
                 && (! $similarMatch || $this->parseLocale($similarMatch)->language === $localeObj->language)
             ) {
                 // Prefer perfect match only if no similar match has been found yet or the perfect match is more precise

@@ -234,7 +234,7 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             'ein Benutzer (special)',
-            $translator->translatePluralInDomain('special','%d user', '%d user', 1)
+            $translator->translatePluralInDomain('special', '%d user', '%d user', 1)
         );
 
         $this->assertSame(
@@ -254,7 +254,7 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             'eine Anfrage (special)',
-            $translator->translatePluralInDomain('special','%d request', '%d requests', 1, 'context')
+            $translator->translatePluralInDomain('special', '%d request', '%d requests', 1, 'context')
         );
 
         $this->assertSame(
@@ -275,7 +275,7 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(
             'eine Gruppe',
-            $translator->translatePluralInDomain('special','%d group', '%d groups', 1)
+            $translator->translatePluralInDomain('special', '%d group', '%d groups', 1)
         );
 
         $this->assertSame(
