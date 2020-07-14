@@ -7,7 +7,60 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 /**
- * Helper class to ease internationalization when using gettext
+ * Translator using PHP's native [gettext](https://www.php.net/gettext) extension
+ *
+ * Since gettext is controlled via {@link setlocale()}, there are usually two drawbacks:
+ * * Languages have to be installed and
+ * * {@link setlocale()} is not threadsafe
+ *
+ * The `GettextTranslator` bypasses this with a little trick: The locale is always set to `C.UTF-8` via calls to
+ * `setlocale(LC_MESSAGES, 'C.UTF-8');` and `putenv('LANGUAGE=C.UTF-8');`.
+ * This way there are no thread safety issues and no languages need to be installed.
+ *
+ * For the locale to work anyway, it must be part of the domain and the .mo files must be named accordingly.
+ * The commonly used directory structure changes as a result of this and **all** message catalogs must be beneath
+ * `C/LC_MESSAGES`:
+ *
+ * ```
+ * /path/to/locales/
+ * └── C/
+ *     └── LC_MESSAGES
+ *         ├── $domain.$locale.mo (e.g. default.de_DE.mo)
+ *         ├── $domain.$locale.mo (e.g. default.it_IT.mo)
+ *         ├── $domain.$locale.mo (e.g. special.de_DE.mo)
+ *         ├── $domain.$locale.mo (e.g. special.it_IT.mo)
+ *         └── ...
+ * ```
+ *
+ * Note that the encoding of domain with locale is abstracted away when using the translation functions and only needs
+ * to be considered when providing message catalogs.
+ *
+ * # Example Usage
+ *
+ * ```php
+ * $translator = (new GettextTranslator())
+ *     ->addTranslationDirectory('/path/to/locales')
+ *     ->addTranslationDirectory('/path/to/locales-of-domain', 'special') // Could also be the same directory as above
+ *     ->setLocale('de_DE');
+ *
+ * $translator->translate('user');
+ *
+ * printf(
+ *     $translator->translatePlural('%d user', '%d user', 42),
+ *     42
+ * );
+ *
+ * $translator->translateInDomain('special-domain', 'request');
+ *
+ * printf(
+ *     $translator->translatePluralInDomain('special-domain', '%d request', '%d requests', 42),
+ *     42
+ * );
+ *
+ * // All translation functions also accept a context as last parameter
+ * $translator->translate('group', 'a-context');
+ * ```
+ *
  */
 class GettextTranslator
 {
