@@ -2,7 +2,7 @@
 
 namespace ipl\I18n;
 
-use ipl\Stdlib\Translator;
+use ipl\Stdlib\Contract\Translator;
 
 /**
  * Translator that just returns the original messages
