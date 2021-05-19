@@ -385,6 +385,15 @@ class GettextTranslator
                     continue;
                 }
 
+                list($actualLocale) = array_slice(
+                    explode(DIRECTORY_SEPARATOR, $file->getPath()),
+                    -2,
+                    1
+                );
+                if ($actualLocale !== 'C') {
+                    continue;
+                }
+
                 $locale = explode('.', $file->getBasename('.mo'));
 
                 $locales[] = array_pop($locale);
