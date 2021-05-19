@@ -5,6 +5,17 @@ namespace ipl\I18n;
 trait Translation
 {
     /**
+     * The domain to use in methods {@see Translation::translate()} and {@see Translation::translatePlural()}
+     *
+     * Set this to your desired domain and use both mentioned methods as usual, if you never require the
+     * default translation domain. (It's still being used as a fallback if your domain doesn't provide a
+     * particular message.)
+     *
+     * @var string
+     */
+    protected $translationDomain;
+
+    /**
      * Translate a message
      *
      * @param string $message
@@ -14,7 +25,9 @@ trait Translation
      */
     public function translate($message, $context = null)
     {
-        return StaticTranslator::$instance->translate($message, $context);
+        return $this->translationDomain === null
+            ? StaticTranslator::$instance->translate($message, $context)
+            : StaticTranslator::$instance->translateInDomain($this->translationDomain, $message, $context);
     }
 
     /**
@@ -48,7 +61,15 @@ trait Translation
      */
     public function translatePlural($singular, $plural, $number, $context = null)
     {
-        return StaticTranslator::$instance->translatePlural($singular, $plural, $number, $context);
+        return $this->translationDomain === null
+            ? StaticTranslator::$instance->translatePlural($singular, $plural, $number, $context)
+            : StaticTranslator::$instance->translatePluralInDomain(
+                $this->translationDomain,
+                $singular,
+                $plural,
+                $number,
+                $context
+            );
     }
 
     /**
