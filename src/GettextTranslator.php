@@ -193,7 +193,7 @@ class GettextTranslator
                 ));
             }
 
-            bind_textdomain_codeset($domain, 'UTF-8');
+            bind_textdomain_codeset($domainWithLocale, 'UTF-8');
 
             $this->loadedTranslations[$locale][$domain] = $directory;
         }
