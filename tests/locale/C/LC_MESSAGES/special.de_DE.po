@@ -26,3 +26,6 @@ msgid "%d request"
 msgid_plural "%d requests"
 msgstr[0] "eine Anfrage (special)"
 msgstr[1] "%d Anfragen (special)"
+
+msgid "Umlauts"
+msgstr "Ümläüt€"

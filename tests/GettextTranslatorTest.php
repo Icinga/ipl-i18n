@@ -88,6 +88,15 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testLoadTranslationRegistersTheCorrectCodeset()
+    {
+        $translator = (new GettextTranslator())
+            ->addTranslationDirectory(static::TRANSLATIONS, 'special')
+            ->setLocale('de_DE');
+
+        $this->assertEquals('Ümläüt€', $translator->translateInDomain('special', 'Umlauts'));
+    }
+
     public function testGetLocaleReturnsNullIfNoLocaleSetUp()
     {
         $this->assertNull((new GettextTranslator())->getLocale());
