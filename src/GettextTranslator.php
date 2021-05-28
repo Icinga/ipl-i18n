@@ -3,6 +3,7 @@
 namespace ipl\I18n;
 
 use FilesystemIterator;
+use ipl\Stdlib\Contract\Translator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -62,7 +63,7 @@ use RecursiveIteratorIterator;
  * ```
  *
  */
-class GettextTranslator
+class GettextTranslator implements Translator
 {
     /** @var string Default gettext domain */
     protected $defaultDomain = 'default';
