@@ -75,14 +75,12 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
         $translator = (new GettextTranslator())
             ->addTranslationDirectory(static::TRANSLATIONS, 'special')
             ->addTranslationDirectory(static::TRANSLATIONS)
-            ->loadTranslation('de_DE');
+            ->loadTranslations();
 
         $this->assertSame(
             [
-                'de_DE' => [
-                    'special'                       => static::TRANSLATIONS,
-                    $translator->getDefaultDomain() => static::TRANSLATIONS
-                ]
+                'special'                       => static::TRANSLATIONS,
+                $translator->getDefaultDomain() => static::TRANSLATIONS
             ],
             $translator->getLoadedTranslations()
         );
@@ -108,28 +106,18 @@ class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
             ->addTranslationDirectory(static::TRANSLATIONS)
             ->setLocale('de_DE');
 
-        $this->assertSame('C.UTF-8', getenv('LANGUAGE'));
-        $this->assertSame('C.UTF-8', setlocale(LC_MESSAGES, null));
+        $this->assertSame('de_DE.UTF-8', getenv('LANGUAGE'));
+        $this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
         $this->assertSame('de_DE', $translator->getLocale());
         $this->assertSame(
-            $translator->encodeDomainWithLocale($translator->getDefaultDomain(), $translator->getLocale()),
+            $translator->getDefaultDomain(),
             textdomain(null)
         );
         $this->assertSame(
             [
-                'de_DE' => [
-                    $translator->getDefaultDomain() => static::TRANSLATIONS
-                ]
+                $translator->getDefaultDomain() => static::TRANSLATIONS
             ],
             $translator->getLoadedTranslations()
-        );
-    }
-
-    public function testEncodeDomainWithLocale()
-    {
-        $this->assertSame(
-            'domain.locale',
-            (new GettextTranslator())->encodeDomainWithLocale('domain', 'locale')
         );
     }
 
