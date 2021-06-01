@@ -4,37 +4,9 @@ namespace ipl\I18n;
 
 use FilesystemIterator;
 use ipl\Stdlib\Contract\Translator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * Translator using PHP's native [gettext](https://www.php.net/gettext) extension
- *
- * Since gettext is controlled via {@link setlocale()}, there are usually two drawbacks:
- * * Languages have to be installed and
- * * {@link setlocale()} is not threadsafe
- *
- * The `GettextTranslator` bypasses this with a little trick: The locale is always set to `C.UTF-8` via calls to
- * `setlocale(LC_MESSAGES, 'C.UTF-8');` and `putenv('LANGUAGE=C.UTF-8');`.
- * This way there are no thread safety issues and no languages need to be installed.
- *
- * For the locale to work anyway, it must be part of the domain and the .mo files must be named accordingly.
- * The commonly used directory structure changes as a result of this and **all** message catalogs must be beneath
- * `C/LC_MESSAGES`:
- *
- * ```
- * /path/to/locales/
- * └── C/
- *     └── LC_MESSAGES
- *         ├── $domain.$locale.mo (e.g. default.de_DE.mo)
- *         ├── $domain.$locale.mo (e.g. default.it_IT.mo)
- *         ├── $domain.$locale.mo (e.g. special.de_DE.mo)
- *         ├── $domain.$locale.mo (e.g. special.it_IT.mo)
- *         └── ...
- * ```
- *
- * Note that the encoding of domain with locale is abstracted away when using the translation functions and only needs
- * to be considered when providing message catalogs.
  *
  * # Example Usage
  *
@@ -74,7 +46,7 @@ class GettextTranslator implements Translator
     /** @var array Known translation directories as array[$domain] => $directory */
     protected $translationDirectories = [];
 
-    /** @var array Loaded translations as array[$locale][$domain] => $directory */
+    /** @var array Loaded translations as array[$domain] => $directory */
     protected $loadedTranslations = [];
 
     /** @var string Primary locale code used for translations */
@@ -156,7 +128,7 @@ class GettextTranslator implements Translator
     /**
      * Get loaded translations
      *
-     * @return array Loaded translations as array[$locale][$domain] => $directory
+     * @return array Loaded translations as array[$domain] => $directory
      */
     public function getLoadedTranslations()
     {
@@ -166,27 +138,23 @@ class GettextTranslator implements Translator
     /**
      * Load a translation so that gettext is able to locate its message catalogs
      *
-     * {@link bindtextdomain()} is called internally for every domain and path that has been added for the given locale
-     * with {@link addTranslation()}.
-     *
-     * @param string $locale Locale code
+     * {@link bindtextdomain()} is called internally for every domain and path
+     * that has been added with {@link addTranslationDirectory()}.
      *
      * @return $this
      * @throws \Exception If {@link bindtextdomain()} fails for a domain
      */
-    public function loadTranslation($locale)
+    public function loadTranslations()
     {
         foreach ($this->translationDirectories as $domain => $directory) {
             if (
-                isset($this->loadedTranslations[$locale][$domain])
-                && $this->loadedTranslations[$locale][$domain] === $directory
+                isset($this->loadedTranslations[$domain])
+                && $this->loadedTranslations[$domain] === $directory
             ) {
                 continue;
             }
 
-            $domainWithLocale = $this->encodeDomainWithLocale($domain, $locale);
-
-            if (bindtextdomain($domainWithLocale, $directory) !== $directory) {
+            if (bindtextdomain($domain, $directory) !== $directory) {
                 throw new \Exception(sprintf(
                     "Can't register domain '%s' with path '%s'",
                     $domain,
@@ -194,9 +162,9 @@ class GettextTranslator implements Translator
                 ));
             }
 
-            bind_textdomain_codeset($domainWithLocale, 'UTF-8');
+            bind_textdomain_codeset($domain, 'UTF-8');
 
-            $this->loadedTranslations[$locale][$domain] = $directory;
+            $this->loadedTranslations[$domain] = $directory;
         }
 
         return $this;
@@ -215,7 +183,7 @@ class GettextTranslator implements Translator
     /**
      * Setup the primary locale code to use for translations
      *
-     * Calls {@link loadTranslation()} internally.
+     * Calls {@link loadTranslations()} internally.
      *
      * @param string $locale Locale code
      *
@@ -224,29 +192,16 @@ class GettextTranslator implements Translator
      */
     public function setLocale($locale)
     {
-        putenv('LANGUAGE=C.UTF-8');
-        setlocale(LC_MESSAGES, 'C.UTF-8');
+        putenv("LANGUAGE=$locale.UTF-8");
+        setlocale(LC_ALL, $locale . '.UTF-8');
 
-        $this->loadTranslation($locale);
+        $this->loadTranslations();
 
-        textdomain($this->encodeDomainWithLocale($this->getDefaultDomain(), $locale));
+        textdomain($this->getDefaultDomain());
 
         $this->locale = $locale;
 
         return $this;
-    }
-
-    /**
-     * Encode a domain with locale to the representation used for .mo files
-     *
-     * @param string $domain
-     * @param string $locale
-     *
-     * @return string The encoded domain as domain + "." + locale
-     */
-    public function encodeDomainWithLocale($domain, $locale)
-    {
-        return $domain . '.' . $locale;
     }
 
     /**
@@ -281,7 +236,7 @@ class GettextTranslator implements Translator
         return $translation;
     }
 
-    public function translateInDomain($domain, $message, $context = null, $locale = null)
+    public function translateInDomain($domain, $message, $context = null)
     {
         if ($context !== null) {
             $messageForGettext = $this->encodeMessageWithContext($message, $context);
@@ -290,13 +245,13 @@ class GettextTranslator implements Translator
         }
 
         $translation = dgettext(
-            $this->encodeDomainWithLocale($domain, $this->getLocale()),
+            $domain,
             $messageForGettext
         );
 
         if ($translation === $messageForGettext) {
             $translation = dgettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $this->getLocale()),
+                $this->getDefaultDomain(),
                 $messageForGettext
             );
         }
@@ -339,7 +294,7 @@ class GettextTranslator implements Translator
         }
 
         $translation = dngettext(
-            $this->encodeDomainWithLocale($domain, $this->getLocale()),
+            $domain,
             $singularForGettext,
             $plural,
             $number
@@ -349,7 +304,7 @@ class GettextTranslator implements Translator
 
         if ($translation === ($isSingular ? $singularForGettext : $plural)) {
             $translation = dngettext(
-                $this->encodeDomainWithLocale($this->getDefaultDomain(), $this->getLocale()),
+                $this->getDefaultDomain(),
                 $singularForGettext,
                 $plural,
                 $number
@@ -373,22 +328,17 @@ class GettextTranslator implements Translator
         $locales = [];
 
         foreach (array_unique($this->getTranslationDirectories()) as $directory) {
-            $fs = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+            $fs = new FilesystemIterator(
                 $directory,
                 FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS
-            ));
+            );
 
             foreach ($fs as $file) {
-                if (
-                    ! $file->isFile()
-                    || $file->getExtension() !== 'mo'
-                ) {
+                if (! $file->isDir()) {
                     continue;
                 }
 
-                $locale = explode('.', $file->getBasename('.mo'));
-
-                $locales[] = array_pop($locale);
+                $locales[] = $file->getBasename();
             }
         }
 
