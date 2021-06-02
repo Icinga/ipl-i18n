@@ -75,6 +75,7 @@ class Locale
             array_values($requestedLocales)
         );
 
+        $available[] = $this->defaultLocale;
         $availableLocales = array_combine(
             array_map('strtolower', array_values($available)),
             array_values($available)

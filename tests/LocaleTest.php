@@ -6,7 +6,7 @@ use ipl\I18n\Locale;
 
 class LocaleTest extends \PHPUnit\Framework\TestCase
 {
-    const AVAILABLE_TRANSLATIONS = ['en_US', 'de_DE', 'de_AT'];
+    const AVAILABLE_TRANSLATIONS = ['de_DE', 'de_AT'];
 
     public function testWhetherGetPreferredFavorsPerfectMatches()
     {
@@ -41,6 +41,11 @@ class LocaleTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             'de_DE',
             (new Locale())->getPreferred('de,en', static::AVAILABLE_TRANSLATIONS),
+            'Locale::getPreferredLocale() does not return the most preferred similar match'
+        );
+        $this->assertEquals(
+            'en_US',
+            (new Locale())->getPreferred('en,de', static::AVAILABLE_TRANSLATIONS),
             'Locale::getPreferredLocale() does not return the most preferred similar match'
         );
     }
