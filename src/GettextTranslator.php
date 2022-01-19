@@ -219,7 +219,7 @@ class GettextTranslator implements Translator
         return "{$context}\x04{$message}";
     }
 
-    public function translate($message, $context = null)
+    public function translate(string $message, ?string $context = null): string
     {
         if ($context !== null) {
             $messageForGettext = $this->encodeMessageWithContext($message, $context);
@@ -236,7 +236,7 @@ class GettextTranslator implements Translator
         return $translation;
     }
 
-    public function translateInDomain($domain, $message, $context = null)
+    public function translateInDomain(string $domain, string $message, ?string $context = null): string
     {
         if ($context !== null) {
             $messageForGettext = $this->encodeMessageWithContext($message, $context);
@@ -263,7 +263,7 @@ class GettextTranslator implements Translator
         return $translation;
     }
 
-    public function translatePlural($singular, $plural, $number, $context = null)
+    public function translatePlural(string $singular, string $plural, int $number, ?string $context = null): string
     {
         if ($context !== null) {
             $singularForGettext = $this->encodeMessageWithContext($singular, $context);
@@ -285,8 +285,13 @@ class GettextTranslator implements Translator
         return $translation;
     }
 
-    public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null)
-    {
+    public function translatePluralInDomain(
+        string $domain,
+        string $singular,
+        string $plural,
+        int $number,
+        ?string $context = null
+    ): string {
         if ($context !== null) {
             $singularForGettext = $this->encodeMessageWithContext($singular, $context);
         } else {
