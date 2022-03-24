@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Icinga/ipl-i18n",
   "license": "MIT",
   "require": {
-    "php": ">=5.6.0",
+    "php": ">=7.2",
     "ext-intl": "*",
     "ext-gettext": "*",
     "ipl/stdlib": ">=0.6.0"

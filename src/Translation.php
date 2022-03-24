@@ -67,7 +67,7 @@ trait Translation
                 $this->translationDomain,
                 $singular,
                 $plural,
-                $number,
+                $number ?? 0,
                 $context
             );
     }
@@ -90,6 +90,12 @@ trait Translation
      */
     public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null)
     {
-        return StaticTranslator::$instance->translatePluralInDomain($domain, $singular, $plural, $number, $context);
+        return StaticTranslator::$instance->translatePluralInDomain(
+            $domain,
+            $singular,
+            $plural,
+            $number ?? 0,
+            $context
+        );
     }
 }
