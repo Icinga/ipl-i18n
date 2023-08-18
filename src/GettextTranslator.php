@@ -4,6 +4,7 @@ namespace ipl\I18n;
 
 use FilesystemIterator;
 use ipl\Stdlib\Contract\Translator;
+use SplFileInfo;
 
 /**
  * Translator using PHP's native [gettext](https://www.php.net/gettext) extension
@@ -43,10 +44,10 @@ class GettextTranslator implements Translator
     /** @var string Default locale code */
     protected $defaultLocale = 'en_US';
 
-    /** @var array Known translation directories as array[$domain] => $directory */
+    /** @var array<string, string> Known translation directories as array[$domain] => $directory */
     protected $translationDirectories = [];
 
-    /** @var array Loaded translations as array[$domain] => $directory */
+    /** @var array<string, string> Loaded translations as array[$domain] => $directory */
     protected $loadedTranslations = [];
 
     /** @var string Primary locale code used for translations */
@@ -103,7 +104,7 @@ class GettextTranslator implements Translator
     /**
      * Get available translations
      *
-     * @return array Available translations as array[$domain] => $directory
+     * @return array<string, string> Available translations as array[$domain] => $directory
      */
     public function getTranslationDirectories()
     {
@@ -128,7 +129,7 @@ class GettextTranslator implements Translator
     /**
      * Get loaded translations
      *
-     * @return array Loaded translations as array[$domain] => $directory
+     * @return array<string, string> Loaded translations as array[$domain] => $directory
      */
     public function getLoadedTranslations()
     {
@@ -333,6 +334,7 @@ class GettextTranslator implements Translator
                 FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS
             );
 
+            /** @var SplFileInfo $file */
             foreach ($fs as $file) {
                 if (! $file->isDir()) {
                     continue;
