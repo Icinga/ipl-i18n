@@ -2,6 +2,8 @@
 
 namespace ipl\I18n;
 
+use stdClass;
+
 class Locale
 {
     /** @var string Default locale code */
@@ -35,7 +37,7 @@ class Locale
      * Return the preferred locale based on the given HTTP header and the available translations
      *
      * @param string $header    The HTTP "Accept-Language" header
-     * @param array  $available Available translations
+     * @param array<string> $available Available translations
      *
      * @return string The browser's preferred locale code
      */
@@ -115,7 +117,7 @@ class Locale
      *
      * @param string $locale
      *
-     * @return object Output of {@link \Locale::parseLocale()} converted to an object
+     * @return stdClass Output of {@link \Locale::parseLocale()} converted to an object
      */
     public function parseLocale($locale)
     {
