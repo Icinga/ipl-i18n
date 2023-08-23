@@ -17,6 +17,9 @@
       "ipl\\I18n\\": "src"
     }
   },
+  "require-dev": {
+    "ipl/stdlib": "dev-main"
+  },
   "autoload-dev": {
     "psr-4": {
       "ipl\\Tests\\I18n\\": "tests"
