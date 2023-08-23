@@ -2,6 +2,9 @@
 
 namespace ipl\I18n;
 
+use ipl\Stdlib\Str;
+use stdClass;
+
 class Locale
 {
     /** @var string Default locale code */
@@ -35,13 +38,13 @@ class Locale
      * Return the preferred locale based on the given HTTP header and the available translations
      *
      * @param string $header    The HTTP "Accept-Language" header
-     * @param array  $available Available translations
+     * @param array<string> $available Available translations
      *
      * @return string The browser's preferred locale code
      */
     public function getPreferred($header, array $available)
     {
-        $headerValues = explode(',', $header);
+        $headerValues = Str::trimSplit($header, ',');
         for ($i = 0; $i < count($headerValues); $i++) {
             // In order to accomplish a stable sort we need to take the original
             // index into account as well during element comparison
@@ -50,8 +53,8 @@ class Locale
         usort( // Sort DESC but keep equal elements ASC
             $headerValues,
             function ($a, $b) {
-                $tagA = explode(';', $a[0], 2);
-                $tagB = explode(';', $b[0], 2);
+                $tagA = Str::trimSplit($a[0], ';', 2);
+                $tagB = Str::trimSplit($b[0], ';', 2);
                 $qValA = (float) (strpos($a[0], ';') > 0 ? substr(array_pop($tagA), 2) : 1);
                 $qValB = (float) (strpos($b[0], ';') > 0 ? substr(array_pop($tagB), 2) : 1);
 
@@ -65,7 +68,7 @@ class Locale
         $requestedLocales = [];
         foreach ($headerValues as $headerValue) {
             if (strpos($headerValue, ';') > 0) {
-                $parts = explode(';', $headerValue, 2);
+                $parts = Str::trimSplit($headerValue, ';', 2);
                 $headerValue = $parts[0];
             }
             $requestedLocales[] = str_replace('-', '_', $headerValue);
@@ -115,7 +118,7 @@ class Locale
      *
      * @param string $locale
      *
-     * @return object Output of {@link \Locale::parseLocale()} converted to an object
+     * @return stdClass Output of {@link \Locale::parseLocale()} converted to an object
      */
     public function parseLocale($locale)
     {
