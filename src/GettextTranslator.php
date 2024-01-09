@@ -2,6 +2,7 @@
 
 namespace ipl\I18n;
 
+use Locale;
 use FilesystemIterator;
 use ipl\Stdlib\Contract\Translator;
 use SplFileInfo;
@@ -195,6 +196,7 @@ class GettextTranslator implements Translator
     {
         putenv("LANGUAGE=$locale.UTF-8");
         setlocale(LC_ALL, $locale . '.UTF-8');
+        Locale::setDefault($locale . '.UTF-8');
 
         $this->loadTranslations();
 
