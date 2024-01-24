@@ -73,12 +73,15 @@ class Locale
             }
             $requestedLocales[] = str_replace('-', '_', $headerValue);
         }
+
+        /** @var array<string, string> $requestedLocales */
         $requestedLocales = array_combine(
             array_map('strtolower', array_values($requestedLocales)),
             array_values($requestedLocales)
         );
 
         $available[] = $this->defaultLocale;
+        /** @var array<string, string> $availableLocales */
         $availableLocales = array_combine(
             array_map('strtolower', array_values($available)),
             array_values($available)
