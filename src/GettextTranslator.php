@@ -51,8 +51,8 @@ class GettextTranslator implements Translator
     /** @var array<string, string> Loaded translations as array[$domain] => $directory */
     protected array $loadedTranslations = [];
 
-    /** @var string Primary locale code used for translations */
-    protected string $locale;
+    /** @var ?string Primary locale code used for translations */
+    protected ?string $locale = null;
 
     /**
      * Get the default domain
@@ -175,9 +175,9 @@ class GettextTranslator implements Translator
     /**
      * Get the primary locale code used for translations
      *
-     * @return string
+     * @return ?string
      */
-    public function getLocale(): string
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
