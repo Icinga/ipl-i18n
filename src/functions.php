@@ -10,7 +10,7 @@ namespace ipl\I18n;
  *
  * @return string Translated message or original message if no translation is found
  */
-function t(string $message, ?string $context = null)
+function t(string $message, ?string $context = null): string
 {
     return StaticTranslator::$instance->translate($message, $context);
 }
@@ -28,7 +28,7 @@ function t(string $message, ?string $context = null)
  *
  * @return string Translated message or original message if no translation is found
  */
-function tp(string $singular, string $plural, int $number, ?string $context = null)
+function tp(string $singular, string $plural, int $number, ?string $context = null): string
 {
     return StaticTranslator::$instance->translatePlural($singular, $plural, $number, $context);
 }
