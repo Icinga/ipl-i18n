@@ -6,7 +6,7 @@ use ipl\I18n\GettextTranslator;
 
 class GettextTranslatorTest extends \PHPUnit\Framework\TestCase
 {
-    const TRANSLATIONS = __DIR__ . '/locale';
+    private const TRANSLATIONS = __DIR__ . '/locale';
 
     public function testGetDefaultDomain()
     {

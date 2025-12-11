@@ -6,7 +6,7 @@ use ipl\I18n\Locale;
 
 class LocaleTest extends \PHPUnit\Framework\TestCase
 {
-    const AVAILABLE_TRANSLATIONS = ['de_DE', 'de_AT'];
+    private const AVAILABLE_TRANSLATIONS = ['de_DE', 'de_AT'];
 
     public function testWhetherGetPreferredFavorsPerfectMatches()
     {
