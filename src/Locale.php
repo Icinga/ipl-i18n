@@ -15,7 +15,7 @@ class Locale
      *
      * @return string
      */
-    public function getDefaultLocale()
+    public function getDefaultLocale(): string
     {
         return $this->defaultLocale;
     }
@@ -27,7 +27,7 @@ class Locale
      *
      * @return $this
      */
-    public function setDefaultLocale($defaultLocale)
+    public function setDefaultLocale(string $defaultLocale): self
     {
         $this->defaultLocale = $defaultLocale;
 
@@ -42,7 +42,7 @@ class Locale
      *
      * @return string The browser's preferred locale code
      */
-    public function getPreferred($header, array $available)
+    public function getPreferred(string $header, array $available): string
     {
         $headerValues = Str::trimSplit($header, ',');
         for ($i = 0; $i < count($headerValues); $i++) {
@@ -120,7 +120,7 @@ class Locale
      *
      * @return stdClass Output of {@link \Locale::parseLocale()} converted to an object
      */
-    public function parseLocale($locale)
+    public function parseLocale(string $locale): object
     {
         return (object) \Locale::parseLocale($locale);
     }

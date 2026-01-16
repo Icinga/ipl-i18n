@@ -18,12 +18,12 @@ trait Translation
     /**
      * Translate a message
      *
-     * @param string $message
-     * @param string $context Message context
+     * @param string  $message
+     * @param ?string $context Message context
      *
      * @return string Translated message or original message if no translation is found
      */
-    public function translate($message, $context = null)
+    public function translate(string $message, ?string $context = null): string
     {
         return $this->translationDomain === null
             ? StaticTranslator::$instance->translate($message, $context)
@@ -35,13 +35,13 @@ trait Translation
      *
      * If no translation is found in the specified domain, the translation is also searched for in the default domain.
      *
-     * @param string $domain
-     * @param string $message
-     * @param string $context Message context
+     * @param string  $domain
+     * @param string  $message
+     * @param ?string $context Message context
      *
      * @return string Translated message or original message if no translation is found
      */
-    public function translateInDomain($domain, $message, $context = null)
+    public function translateInDomain(string $domain, string $message, ?string $context = null): string
     {
         return StaticTranslator::$instance->translateInDomain($domain, $message, $context);
     }
@@ -52,14 +52,14 @@ trait Translation
      * The returned message is based on the given number to decide between the singular and plural forms.
      * That is also the case if no translation is found.
      *
-     * @param string $singular Singular message
-     * @param string $plural   Plural message
-     * @param ?int   $number   Number to decide between the returned singular and plural forms
-     * @param string $context  Message context
+     * @param string  $singular Singular message
+     * @param string  $plural   Plural message
+     * @param ?int    $number   Number to decide between the returned singular and plural forms
+     * @param ?string $context  Message context
      *
      * @return string Translated message or original message if no translation is found
      */
-    public function translatePlural($singular, $plural, $number, $context = null)
+    public function translatePlural(string $singular, string $plural, ?int $number, ?string $context = null): string
     {
         return $this->translationDomain === null
             ? StaticTranslator::$instance->translatePlural($singular, $plural, $number ?? 0, $context)
@@ -80,21 +80,26 @@ trait Translation
      * The returned message is based on the given number to decide between the singular and plural forms.
      * That is also the case if no translation is found.
      *
-     * @param string $domain
-     * @param string $singular Singular message
-     * @param string $plural   Plural message
-     * @param ?int   $number   Number to decide between the returned singular and plural forms
-     * @param string $context  Message context
+     * @param string  $domain
+     * @param string  $singular Singular message
+     * @param string  $plural   Plural message
+     * @param ?int    $number   Number to decide between the returned singular and plural forms
+     * @param ?string $context  Message context
      *
      * @return string Translated message or original message if no translation is found
      */
-    public function translatePluralInDomain($domain, $singular, $plural, $number, $context = null)
-    {
+    public function translatePluralInDomain(
+        string $domain,
+        string $singular,
+        string $plural,
+        ?int $number,
+        ?string $context = null
+    ): string {
         return StaticTranslator::$instance->translatePluralInDomain(
             $domain,
             $singular,
             $plural,
-            $number ?? 0,
+                $number ?? 0,
             $context
         );
     }
