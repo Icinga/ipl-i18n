@@ -2,6 +2,7 @@
 
 namespace ipl\I18n;
 
+use Exception;
 use Locale;
 use FilesystemIterator;
 use ipl\Stdlib\Contract\Translator;
@@ -144,7 +145,7 @@ class GettextTranslator implements Translator
      * that has been added with {@link addTranslationDirectory()}.
      *
      * @return $this
-     * @throws \Exception If {@link bindtextdomain()} fails for a domain
+     * @throws Exception If {@link bindtextdomain()} fails for a domain
      */
     public function loadTranslations(): static
     {
@@ -157,7 +158,7 @@ class GettextTranslator implements Translator
             }
 
             if (bindtextdomain($domain, $directory) !== $directory) {
-                throw new \Exception(sprintf(
+                throw new Exception(sprintf(
                     "Can't register domain '%s' with path '%s'",
                     $domain,
                     $directory
@@ -190,7 +191,7 @@ class GettextTranslator implements Translator
      * @param string $locale Locale code
      *
      * @return $this
-     * @throws \Exception If {@link bindtextdomain()} fails for a domain
+     * @throws Exception If {@link bindtextdomain()} fails for a domain
      */
     public function setLocale(string $locale): static
     {
