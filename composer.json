@@ -6,10 +6,10 @@
   "homepage": "https://github.com/Icinga/ipl-i18n",
   "license": "MIT",
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.2",
     "ext-intl": "*",
     "ext-gettext": "*",
-    "ipl/stdlib": ">=0.12.0"
+    "ipl/stdlib": ">=0.15.0"
   },
   "autoload": {
     "files": ["src/functions_include.php"],
