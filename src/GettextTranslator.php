@@ -13,29 +13,27 @@ use SplFileInfo;
  *
  * # Example Usage
  *
- * ```php
- * $translator = (new GettextTranslator())
- *     ->addTranslationDirectory('/path/to/locales')
- *     ->addTranslationDirectory('/path/to/locales-of-domain', 'special') // Could also be the same directory as above
- *     ->setLocale('de_DE');
+ *     $translator = (new GettextTranslator())
+ *         ->addTranslationDirectory('/path/to/locales')
+ *         ->addTranslationDirectory('/path/to/locales-of-domain', 'special') // Can be the same directory as above.
+ *         ->setLocale('de_DE');
  *
- * $translator->translate('user');
+ *     $translator->translate('user');
  *
- * printf(
- *     $translator->translatePlural('%d user', '%d user', 42),
- *     42
- * );
+ *     printf(
+ *         $translator->translatePlural('%d user', '%d user', 42),
+ *         42
+ *     );
  *
- * $translator->translateInDomain('special-domain', 'request');
+ *     $translator->translateInDomain('special-domain', 'request');
  *
- * printf(
- *     $translator->translatePluralInDomain('special-domain', '%d request', '%d requests', 42),
- *     42
- * );
+ *     printf(
+ *         $translator->translatePluralInDomain('special-domain', '%d request', '%d requests', 42),
+ *         42
+ *     );
  *
- * // All translation functions also accept a context as last parameter
- * $translator->translate('group', 'a-context');
- * ```
+ *     // All translation functions also accept a context as last parameter.
+ *     $translator->translate('group', 'a-context');
  *
  */
 class GettextTranslator implements Translator
@@ -141,11 +139,11 @@ class GettextTranslator implements Translator
     /**
      * Load a translation so that gettext is able to locate its message catalogs
      *
-     * {@link bindtextdomain()} is called internally for every domain and path
-     * that has been added with {@link addTranslationDirectory()}.
+     * {@see bindtextdomain()} is called internally for every domain and path
+     * that has been added with {@see addTranslationDirectory()}.
      *
      * @return $this
-     * @throws Exception If {@link bindtextdomain()} fails for a domain
+     * @throws Exception If {@see bindtextdomain()} fails for a domain
      */
     public function loadTranslations(): static
     {
@@ -184,14 +182,14 @@ class GettextTranslator implements Translator
     }
 
     /**
-     * Setup the primary locale code to use for translations
+     * Set up the primary locale code to use for translations
      *
-     * Calls {@link loadTranslations()} internally.
+     * Calls {@see loadTranslations()} internally.
      *
      * @param string $locale Locale code
      *
      * @return $this
-     * @throws Exception If {@link bindtextdomain()} fails for a domain
+     * @throws Exception If {@see bindtextdomain()} fails for a domain
      */
     public function setLocale(string $locale): static
     {
@@ -328,7 +326,7 @@ class GettextTranslator implements Translator
     }
 
     /**
-     * List available locales by traversing the translation directories from {@link addTranslationDirectory()}
+     * List available locales by traversing the translation directories from {@see addTranslationDirectory()}
      *
      * @return string[] Array of available locale codes
      */

@@ -2,6 +2,9 @@
 
 namespace ipl\I18n;
 
+/**
+ * Provide translation helpers backed by {@see StaticTranslator::$instance}
+ */
 trait Translation
 {
     /**
