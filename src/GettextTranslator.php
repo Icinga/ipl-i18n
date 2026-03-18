@@ -216,8 +216,7 @@ class GettextTranslator implements Translator
      */
     public function encodeMessageWithContext(string $message, string $context): string
     {
-        // The encoding of a context and a message in a .mo file is
-        // context + "\x04" + message (gettext version >= 0.15)
+        // .mo format: context + "\x04" + message (gettext >= 0.15).
         return "{$context}\x04{$message}";
     }
 

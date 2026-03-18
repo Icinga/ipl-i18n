@@ -49,11 +49,10 @@ class Locale
     {
         $headerValues = Str::trimSplit($header, ',');
         for ($i = 0; $i < count($headerValues); $i++) {
-            // In order to accomplish a stable sort we need to take the original
-            // index into account as well during element comparison
+            // Include the original index to ensure a stable sort.
             $headerValues[$i] = [$headerValues[$i], $i];
         }
-        usort( // Sort DESC but keep equal elements ASC
+        usort( // Sort DESC, keeping equal elements ASC.
             $headerValues,
             function ($a, $b) {
                 $tagA = Str::trimSplit($a[0], ';', 2);
@@ -65,7 +64,7 @@ class Locale
             }
         );
         for ($i = 0; $i < count($headerValues); $i++) {
-            // We need to reset the array to its original structure once it's sorted
+            // Restore the original array structure after sorting.
             $headerValues[$i] = $headerValues[$i][0];
         }
         $requestedLocales = [];
@@ -96,8 +95,6 @@ class Locale
                 isset($availableLocales[$requestedLocaleLowered])
                 && (! $similarMatch || $this->parseLocale($similarMatch)->language === $localeObj->language)
             ) {
-                // Prefer perfect match only if no similar match has been found yet or the perfect match is more precise
-                // than the similar match
                 return $availableLocales[$requestedLocaleLowered];
             }
 
