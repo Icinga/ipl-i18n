@@ -3,9 +3,9 @@
 namespace ipl\I18n;
 
 use Exception;
-use Locale;
 use FilesystemIterator;
 use ipl\Stdlib\Contract\Translator;
+use Locale;
 use SplFileInfo;
 
 /**
