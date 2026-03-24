@@ -4,6 +4,8 @@ All notable changes to this library are documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-03-24
+
 - **Breaking** Raise minimum PHP version to 8.2 (#13)
 - Add strict type declarations (#13, #26)
 
@@ -35,7 +37,8 @@ All notable changes to this library are documented in this file.
 - Add global helper functions `t()` and `tp()` wrapping
   `StaticTranslator` (#1)
 
-[Unreleased]: https://github.com/Icinga/ipl-i18n/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/Icinga/ipl-i18n/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Icinga/ipl-i18n/releases/tag/v1.0.0
 [0.2.2]: https://github.com/Icinga/ipl-i18n/releases/tag/v0.2.2
 [0.2.1]: https://github.com/Icinga/ipl-i18n/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Icinga/ipl-i18n/releases/tag/v0.2.0
