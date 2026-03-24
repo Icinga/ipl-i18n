@@ -9,6 +9,5 @@ use ipl\Stdlib\Contract\Translator;
  */
 class StaticTranslator
 {
-    /** @var Translator */
     public static Translator $instance;
 }

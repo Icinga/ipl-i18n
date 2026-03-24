@@ -5,6 +5,9 @@ namespace ipl\I18n;
 use ipl\Stdlib\Str;
 use stdClass;
 
+/**
+ * Negotiate and parse locale codes
+ */
 class Locale
 {
     /** @var string Default locale code */
@@ -37,7 +40,7 @@ class Locale
     /**
      * Return the preferred locale based on the given HTTP header and the available translations
      *
-     * @param string $header    The HTTP "Accept-Language" header
+     * @param string $header The HTTP "Accept-Language" header
      * @param array<string> $available Available translations
      *
      * @return string The browser's preferred locale code
@@ -46,11 +49,10 @@ class Locale
     {
         $headerValues = Str::trimSplit($header, ',');
         for ($i = 0; $i < count($headerValues); $i++) {
-            // In order to accomplish a stable sort we need to take the original
-            // index into account as well during element comparison
+            // Include the original index to ensure a stable sort.
             $headerValues[$i] = [$headerValues[$i], $i];
         }
-        usort( // Sort DESC but keep equal elements ASC
+        usort( // Sort DESC, keeping equal elements ASC.
             $headerValues,
             function ($a, $b) {
                 $tagA = Str::trimSplit($a[0], ';', 2);
@@ -62,7 +64,7 @@ class Locale
             }
         );
         for ($i = 0; $i < count($headerValues); $i++) {
-            // We need to reset the array to its original structure once it's sorted
+            // Restore the original array structure after sorting.
             $headerValues[$i] = $headerValues[$i][0];
         }
         $requestedLocales = [];
@@ -93,8 +95,6 @@ class Locale
                 isset($availableLocales[$requestedLocaleLowered])
                 && (! $similarMatch || $this->parseLocale($similarMatch)->language === $localeObj->language)
             ) {
-                // Prefer perfect match only if no similar match has been found yet or the perfect match is more precise
-                // than the similar match
                 return $availableLocales[$requestedLocaleLowered];
             }
 
@@ -114,11 +114,11 @@ class Locale
     /**
      * Parse a locale into its subtags
      *
-     * Converts to output of {@link \Locale::parseLocale()} to an object and returns it.
+     * Convert the output of {@see \Locale::parseLocale()} to an object and return it.
      *
      * @param string $locale
      *
-     * @return stdClass Output of {@link \Locale::parseLocale()} converted to an object
+     * @return stdClass Output of {@see \Locale::parseLocale()} converted to an object
      */
     public function parseLocale(string $locale): stdClass
     {
